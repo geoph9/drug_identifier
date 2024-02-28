@@ -1,0 +1,16 @@
+{
+  "_checkout": "2022.6.3",
+  "_output_dir": "/home/geoph/Documents/CV/intelligencia",
+  "_repo_dir": "/home/geoph/.cookiecutters/cookiecutter-hypermodern-python",
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Georgios Karakasidis",
+  "copyright_year": "2024",
+  "development_status": "Development Status :: 1 - Planning",
+  "email": "geoph9@proton.me",
+  "friendly_name": "Drug Discoverer",
+  "github_user": "geoph9",
+  "license": "MIT",
+  "package_name": "drug_discoverer",
+  "project_name": "drug_discoverer",
+  "version": "0.0.0"
+}
