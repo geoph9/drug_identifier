@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from sqlalchemy import Column, column
+from sqlalchemy import Column
 from sqlalchemy import Integer
 from sqlalchemy import SmallInteger
 from sqlalchemy import String
@@ -70,9 +70,7 @@ class DrugDB:
             column_name = Synonyms.lname
         else:
             column_name = Synonyms.name
-        query_result = (
-            self.session.query(Synonyms).filter(column_name == name).first()
-        )
+        query_result = self.session.query(Synonyms).filter(column_name == name).first()
         if query_result:
             if query_result.preferred_name == 1:  # type: ignore
                 return str(query_result.lname) if is_lower else str(query_result.name)
@@ -85,7 +83,9 @@ class DrugDB:
                     .first()
                 )
                 if query_result:
-                    return str(query_result.lname) if is_lower else str(query_result.name)
+                    return (
+                        str(query_result.lname) if is_lower else str(query_result.name)
+                    )
         return f"<UNMATCHED> {name}"
 
     def get_synonyms(self, lname: str) -> List[str]:

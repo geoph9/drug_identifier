@@ -53,7 +53,10 @@ class BaseClassifier(ABC):
         """Convert the classifier output to preferred drug names. Assumes
         that self.drug_db is a valid DrugDB instance.
         """
-        return [self.drug_db.get_preferred_name(name, is_lower=self.to_lower) for name in clf_output]
+        return [
+            self.drug_db.get_preferred_name(name, is_lower=self.to_lower)
+            for name in clf_output
+        ]
 
     def classify(self, nctids: List[str], output_filename: str) -> None:
         """Classify the input text and return the matched drug names.
@@ -74,7 +77,11 @@ class BaseClassifier(ABC):
         if self.save_unmatched_drugs:
             for nctid, drugs in nctid_to_drugs_found.items():
                 # TODO: Inneficent double parsing, but it's ok for now
-                unmatched_drugs = [drug.replace("<UNMATCHED> ", "") for drug in drugs if "<UNMATCHED> " in drug]
+                unmatched_drugs = [
+                    drug.replace("<UNMATCHED> ", "")
+                    for drug in drugs
+                    if "<UNMATCHED> " in drug
+                ]
                 nctid_to_drugs_found[nctid] = {
                     "matched": [drug for drug in drugs if "<UNMATCHED>" not in drug],
                     "unmatched": unmatched_drugs,

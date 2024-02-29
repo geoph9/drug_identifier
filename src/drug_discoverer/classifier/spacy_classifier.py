@@ -26,7 +26,7 @@ class SpacyClassifier(BaseClassifier):
             drug_db,
             lower_case,
             remove_punctuation=False,
-            save_unmatched_drugs=save_unmatched_drugs
+            save_unmatched_drugs=save_unmatched_drugs,
         )
         self.nlp = spacy.load("en_core_med7_trf")
 
@@ -35,5 +35,9 @@ class SpacyClassifier(BaseClassifier):
         Only unique drug names are returned.
         """
         doc = self.nlp(text)
-        drug_names = list(set([ent.text.lower() for ent in doc.ents if ent.label_ == "DRUG"]))
+        drug_names = list(set(
+            {ent.text for ent in doc.ents if ent.label_ == "DRUG"}
+        ))
+        if self.to_lower:
+            drug_names = [name.lower() for name in drug_names]
         return drug_names

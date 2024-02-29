@@ -7,6 +7,7 @@ from loguru import logger
 
 from drug_discoverer.classifier.dummy_classifier import DummyClassifier
 from drug_discoverer.classifier.spacy_classifier import SpacyClassifier
+from drug_discoverer.classifier.llm_classifier import LLMClassifier
 from drug_discoverer.drug_db import DrugDB
 from drug_discoverer.utils import get_env_variables
 
@@ -43,7 +44,22 @@ logger.add(sys.stderr, level="INFO")
     is_flag=True,
     help="Keep the unmatched drugs in the output json. A drug is considered unmatched if it is not found in the drug db.",
 )
-def main(nctids_file: str, output_json: str, clf_type: str = "llm", keep_unmatched_drugs: bool = False) -> None:
+@click.option(
+    "--llm-template",
+    "-t",
+    type=click.Choice(["DrugDiscoveryOneShotTemplate", "DrugDiscoveryZeroShotTemplate", "1shot", "0shot", "one-shot", "zero-shot"]),
+    default="DrugDiscoveryOneShotTemplate",
+    help="The template to use for the LLM classifier. Default: DrugDiscoveryOneShotTemplate. "\
+        "Options: '1shot', '0shot', 'one-shot', 'zero-shot', 'DrugDiscoveryOneShotTemplate', 'DrugDiscoveryZeroShotTemplate'."\
+            "Only used if --clf-type is 'llm'",
+)
+def main(
+    nctids_file: str,
+    output_json: str,
+    clf_type: str = "llm",
+    keep_unmatched_drugs: bool = False,
+    llm_template: str = "DrugDiscoveryOneShotTemplate",
+) -> None:
     """Drug Discoverer. Steps:
     1. Connect to the database and get the list of drug names.
     2. Create a Classifier instance with the drug db as input.
@@ -70,7 +86,11 @@ def main(nctids_file: str, output_json: str, clf_type: str = "llm", keep_unmatch
         "save_unmatched_drugs": keep_unmatched_drugs,
     }
     if clf_type == "llm":
-        raise NotImplementedError("LLM classifier is not implemented yet.")
+        classifier = LLMClassifier(
+            model="gpt-3.5-turbo",
+            template=llm_template,
+            **kwargs,
+        )
     elif clf_type == "spacy":
         classifier = SpacyClassifier(**kwargs)
     elif clf_type == "dummy":
