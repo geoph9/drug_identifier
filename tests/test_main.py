@@ -1,4 +1,6 @@
 """Test cases for the __main__ module."""
+import os
+
 import pytest
 from click.testing import CliRunner
 
@@ -11,7 +13,15 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-def test_main_succeeds(runner: CliRunner) -> None:
+def test_main_succeeds_with_dummy_classifier(runner: CliRunner) -> None:
     """It exits with a status code of zero."""
-    result = runner.invoke(__main__.main)
+    test_data_path = "tests/data/nctids.txt"
+    output_json = "tests/data/output.json"
+    result = runner.invoke(
+        __main__.main,
+        ["--nctids-file", test_data_path, "--output-json", output_json, "--clf-type", "dummy"]
+    )
+    assert os.path.isfile(output_json), f"Expected to find the output file {output_json} but it was not found."
+    # delete the output file
+    os.remove(output_json)
     assert result.exit_code == 0

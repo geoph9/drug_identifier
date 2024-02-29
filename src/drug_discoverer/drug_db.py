@@ -1,10 +1,8 @@
 import os
 from typing import List
 
-from loguru import logger
 from sqlalchemy import create_engine, Column, String, Integer, SmallInteger
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 
 Base = declarative_base()

@@ -23,7 +23,17 @@
 
 ## Features
 
-- TODO
+- Given a list of NCTIDs, search clinicaltrials.gov to get a list of summaries of the trials.
+- Given a list of drugs, search the DrugCentral database to get a list of synonyms for the drugs.
+- For each clinical trial summary, identify the drug names that appear in the summary.
+- Option 1: Use a dummy classifier to predict whether a drug is mentioned in the summary. This is
+   purely for demonstration purposes and it just searches for words that appear both in the synonyms
+   table of the database and in the clinical trial summary.
+- Option 2: Use prompt engineering to ask an LLM model to predict whether a drug is mentioned in the
+   summary. LangChain is used for this purpose, along with ChatGPT.
+
+
+NOTE: For the LLM prompting case, you need to have a valid openai API key (requires credits).
 
 ## Requirements
 
@@ -77,12 +87,21 @@ You can install _Drug Discoverer_ via poetry. To do so, you first need to clone 
 follow the instructions below:
 
 ```bash
-git clone <TODO>
-cd drug_discoverer
+git clone git@github.com:geoph9/drug_identifier.git
+cd drug_identifier
 poetry install
 ```
 
 ## Usage
+
+Before using this library, make sure you have a `.env` file containing the following environment variables:
+
+```bash
+OPENAI_API_KEY=<your_openai_api_key>
+DB_USERNAME=<your_db_username>
+DB_PWD=<your_db_password>
+DB_NAME=<your_db_name>
+```
 
 Please see the [Command-line Reference] for details.
 
