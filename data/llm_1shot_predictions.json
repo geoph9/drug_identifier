@@ -1,0 +1,333 @@
+{
+    "NCT00037648": {
+        "matched": [
+            "anakinra"
+        ],
+        "unmatched": []
+    },
+    "NCT00048542": {
+        "matched": [
+            "adalimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00071487": {
+        "matched": [
+            "belimumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00071812": {
+        "matched": [
+            "belimumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00072839": {
+        "matched": [
+            "teduglutide"
+        ],
+        "unmatched": []
+    },
+    "NCT00074438": {
+        "matched": [
+            "methotrexate",
+            "rituximab"
+        ],
+        "unmatched": [
+            "corticosteroids"
+        ]
+    },
+    "NCT00078806": {
+        "matched": [
+            "etanercept"
+        ],
+        "unmatched": []
+    },
+    "NCT00078819": {
+        "matched": [
+            "etanercept"
+        ],
+        "unmatched": []
+    },
+    "NCT00079937": {
+        "matched": [
+            "omalizumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00090142": {
+        "matched": [],
+        "unmatched": []
+    },
+    "NCT00092131": {
+        "matched": [],
+        "unmatched": []
+    },
+    "NCT00095173": {
+        "matched": [
+            "abatacept",
+            "abatacept"
+        ],
+        "unmatched": []
+    },
+    "NCT00097370": {
+        "matched": [
+            "mepolizumab"
+        ],
+        "unmatched": [
+            "corticosteroid"
+        ]
+    },
+    "NCT00106522": {
+        "matched": [
+            "methotrexate",
+            "tocilizumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00106535": {
+        "matched": [
+            "methotrexate",
+            "tocilizumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00106548": {
+        "matched": [
+            "methotrexate",
+            "tocilizumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00109408": {
+        "matched": [
+            "methotrexate",
+            "tocilizumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00109707": {
+        "matched": [
+            "imatinib"
+        ],
+        "unmatched": [
+            "amn107"
+        ]
+    },
+    "NCT00110916": {
+        "matched": [
+            "anakinra"
+        ],
+        "unmatched": []
+    },
+    "NCT00111436": {
+        "matched": [
+            "etanercept"
+        ],
+        "unmatched": []
+    },
+    "NCT00119678": {
+        "matched": [
+            "abatacept",
+            "prednisone"
+        ],
+        "unmatched": []
+    },
+    "NCT00120523": {
+        "matched": [
+            "pimecrolimus"
+        ],
+        "unmatched": [
+            "topical corticosteroids"
+        ]
+    },
+    "NCT00130390": {
+        "matched": [
+            "nitazoxanide"
+        ],
+        "unmatched": []
+    },
+    "NCT00137969": {
+        "matched": [
+            "rituximab"
+        ],
+        "unmatched": []
+    },
+    "NCT00141921": {
+        "matched": [
+            "etanercept"
+        ],
+        "unmatched": []
+    },
+    "NCT00146640": {
+        "matched": [
+            "prednisone"
+        ],
+        "unmatched": []
+    },
+    "NCT00171860": {
+        "matched": [
+            "imatinib",
+            "hydroxycarbamide",
+            "prednisone"
+        ],
+        "unmatched": [
+            "interferon-alpha"
+        ]
+    },
+    "NCT00175877": {
+        "matched": [
+            "certolizumab pegol"
+        ],
+        "unmatched": []
+    },
+    "NCT00195663": {
+        "matched": [
+            "adalimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00195702": {
+        "matched": [
+            "adalimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00206596": {
+        "matched": [
+            "sargramostim"
+        ],
+        "unmatched": []
+    },
+    "NCT00206661": {
+        "matched": [
+            "sargramostim"
+        ],
+        "unmatched": [
+            "steroid"
+        ]
+    },
+    "NCT00206700": {
+        "matched": [
+            "sargramostim"
+        ],
+        "unmatched": []
+    },
+    "NCT00206713": {
+        "matched": [
+            "sargramostim"
+        ],
+        "unmatched": []
+    },
+    "NCT00207714": {
+        "matched": [
+            "golimumab"
+        ],
+        "unmatched": [
+            "mtx"
+        ]
+    },
+    "NCT00207740": {
+        "matched": [
+            "golimumab",
+            "golimumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00221026": {
+        "matched": [],
+        "unmatched": [
+            "uvadex"
+        ]
+    },
+    "NCT00235820": {
+        "matched": [
+            "adalimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00244842": {
+        "matched": [
+            "voclosporin"
+        ],
+        "unmatched": []
+    },
+    "NCT00245570": {
+        "matched": [],
+        "unmatched": [
+            "exercise-induced asthma"
+        ]
+    },
+    "NCT00245765": {
+        "matched": [],
+        "unmatched": [
+            "cdp870"
+        ]
+    },
+    "NCT00254293": {
+        "matched": [
+            "abatacept"
+        ],
+        "unmatched": []
+    },
+    "NCT00264537": {
+        "matched": [
+            "golimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00264550": {
+        "matched": [
+            "golimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00265096": {
+        "matched": [
+            "golimumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00265122": {
+        "matched": [
+            "ustekinumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00266565": {
+        "matched": [],
+        "unmatched": []
+    },
+    "NCT00267956": {
+        "matched": [
+            "ustekinumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00267969": {
+        "matched": [
+            "ustekinumab",
+            "ustekinumab"
+        ],
+        "unmatched": []
+    },
+    "NCT00269841": {
+        "matched": [],
+        "unmatched": [
+            "chimeric monoclonal antibody (ca2)"
+        ]
+    },
+    "NCT00269854": {
+        "matched": [],
+        "unmatched": [
+            "anti-tnf chimeric monoclonal antibody (ca2)"
+        ]
+    }
+}

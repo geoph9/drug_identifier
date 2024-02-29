@@ -38,7 +38,7 @@ in json format in the file `test_outputs.json`.
 
 NOTE: For the LLM prompting case, you need to have a valid openai API key (requires credits).
 
-Evaluating the results of the predictions is impossible since we don't have ground truth labels. However, 
+Evaluating the results of the predictions is impossible since we don't have ground truth labels. However,
 due to the small size of the given NCTIDs, we can manually check the results and see if they make sense.
 
 ## Requirements
@@ -104,7 +104,6 @@ cd drug_identifier
 poetry install
 ```
 
-
 ### Using SpaCy
 
 You will additionally need to download the medical NER model `en_core_med7_trf` from spaCy. To do so, run the following command:
@@ -112,6 +111,9 @@ You will additionally need to download the medical NER model `en_core_med7_trf` 
 ```bash
 poetry run pip install https://huggingface.co/kormilitzin/en_core_med7_trf/resolve/main/en_core_med7_trf-any-py3-none-any.whl
 ```
+
+This is because the aforementioned model is more than 1GB in size and there is no point in downloading it by default,
+since the LLM functionality is the main thing we are interested in.
 
 ## Usage
 
@@ -130,11 +132,48 @@ From inside the directory run:
 poetry run python -m drug_discoverer --nctids-file data/nctids.txt --output-file test_outputs.json --clf-type llm
 ```
 
+To see a list of all available options, run:
+
+```bash
+> poetry run python -m drug_discoverer --help
+
+Usage: drug_discoverer [OPTIONS]
+
+  Drug Discoverer. Steps: 
+    1. Connect to the database and get the list of drug names. 
+    2. Create a Classifier instance with the drug db as input.
+    3. Load the file under --nctids-file and get the NCTIDs.
+    4. Use <classifier_obj>.classify to load the bried summaries of each NCTID,
+       classify    them, convert them to their preferred name, and save the results
+       to a json.
+    5. Save the results in json format.
+    6. (Not done by this script) Evaluate the results.
+
+Options:
+  --version                       Show the version and exit.
+  -n, --nctids-file PATH          Path to a file containing the NCTIDs.
+                                  [required]
+  -o, --output-json PATH          Path to the output json file.  [required]
+  -c, --clf-type [llm|spacy|dummy]
+                                  Type of classifier to use. Options: 'llm',
+                                  'spacy', 'dummy'. Default: 'llm'
+  -k, --keep-unmatched-drugs      Keep the unmatched drugs in the output json.
+                                  A drug is considered unmatched if it is not
+                                  found in the drug db.
+  -t, --llm-template [1shot|0shot|one-shot|zero-shot]
+                                  The template to use for the LLM classifier.
+                                  Default: 1shot. Options: '1shot', '0shot', 
+                                  'one-shot', 'zero-shot'.Only used if
+                                  --clf-type is 'llm'
+  --help                          Show this message and exit.
+```
+
 If you want to keep the information about the drugs found by the LLM that did not have a match in the database,
 then you may also pass the `--keep-unmatched-drugs` (or just `-k`) flag. The unmatched drugs will be saved in the
 same file as the matched ones and will be under the `"unmatched"` key of each NCTID.
 
 Example output json:
+
 ```json
 {
   "NCT00000102": {

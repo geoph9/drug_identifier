@@ -1,4 +1,5 @@
 """Sphinx configuration."""
+
 project = "Drug Discoverer"
 author = "Georgios Karakasidis"
 copyright = "2024, Georgios Karakasidis"
