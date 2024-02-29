@@ -13,7 +13,7 @@ Clinical Trial Summary: ```{summary}```
 Drug names: 
 """
 
-def get_template(template_name):
+def get_template(template_name: str) -> str:
     if template_name in ["1shot", "one-shot", "DrugDiscoveryOneShotTemplate"]:
         return DrugDiscoveryOneShotTemplate
     elif template_name in ["0shot", "zero-shot", "DrugDiscoveryZeroShotTemplate"]:

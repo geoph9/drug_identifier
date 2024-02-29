@@ -5,15 +5,14 @@ description = "Drug Discoverer"
 authors = ["Georgios Karakasidis <geoph9@proton.me>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/geoph9/drug_discoverer"
-repository = "https://github.com/geoph9/drug_discoverer"
-documentation = "https://drug_discoverer.readthedocs.io"
+homepage = "https://github.com/geoph9/drug_identifier"
+repository = "https://github.com/geoph9/drug_identifier"
 classifiers = [
     "Development Status :: 1 - Planning",
 ]
 
 [tool.poetry.urls]
-Changelog = "https://github.com/geoph9/drug_discoverer/releases"
+Changelog = "https://github.com/geoph9/drug_identifier/releases"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"

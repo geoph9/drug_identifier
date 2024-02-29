@@ -18,12 +18,27 @@
 _Drug Discoverer_ is a Python library for identifying drugs in clinical trial summaries. Example usage from the command line:
 
 ```bash
-python -m drug_discoverer --nctids-file data/nctids.txt --output-file test_outputs.json --clf-type llm
+python -m drug_discoverer --nctids-file data/nctids.txt \
+                          --output-file data/llm_1shot_predictions.json \
+                          --clf-type llm \
+                          --llm-template 1shot
 ```
 
 The above command will read the NCTIDs from the file `data/nctids.txt`, get their brief summaries from clinicaltrials.gov,
 and then use ChatGPT (through LangChain) to classify which drugs are mentioned in each summary. The results will be saved
 in json format in the file `test_outputs.json`.
+
+## Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Evaluation](#evaluation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Issues](#issues)
+- [Credits](#credits)
 
 ## Features
 
@@ -31,10 +46,11 @@ in json format in the file `test_outputs.json`.
 - Given a list of drugs, search the DrugCentral database to get a list of synonyms for the drugs.
 - For each clinical trial summary, identify the drug names that appear in the summary.
 - Option 1: Use a dummy classifier to predict whether a drug is mentioned in the summary. This is
-  purely for demonstration purposes and it just searches for words that appear both in the synonyms
+  purely for demonstrational purposes and it just searches for words that appear both in the synonyms
   table of the database and in the clinical trial summary.
 - Option 2: Use prompt engineering to ask an LLM model to predict whether a drug is mentioned in the
   summary. LangChain is used for this purpose, along with ChatGPT.
+- Option 3: Use a purely NLP solution to predict whether a drug is mentioned in the summary. This is done with the help of spaCy's medical NER model.
 
 NOTE: For the LLM prompting case, you need to have a valid openai API key (requires credits).
 
@@ -66,7 +82,7 @@ sudo -u <user> psql -d your_database_name -a -f drugcentral.dump.11012023.sql
 ```
 
 We only care about the `synonyms` table of the `public` schema. Here is a preview of how that looks
-after being loaded to a pandas dataframe:
+after being loaded to a pandas dataframe (for demonstration purposes only; you don't need to install pandas to use this library):
 
 ```python
 >>> import pandas as pd
@@ -77,11 +93,11 @@ after being loaded to a pandas dataframe:
 ... df = pd.read_sql_query(query, engine)
 >>> df.head()
    syn_id      id                        name  preferred_name  parent_id                       lname
-0   23310  5391.0                 sacituzumab             NaN        NaN                 sacituzumab
-1   23311  5391.0       sacituzumab govitecan             1.0        NaN       sacituzumab govitecan
-2   23312  5391.0  sacituzumab govitecan-hziy             NaN        NaN  sacituzumab govitecan-hziy
-3   23313  5391.0                    trodelvy             NaN        NaN                    trodelvy
-4   23314  5391.0                    IMMU-132             NaN        NaN                    immu-132
+0   23310  5391                 sacituzumab             NaN        NaN                 sacituzumab
+1   23311  5391       sacituzumab govitecan             1.0        NaN       sacituzumab govitecan
+2   23312  5391  sacituzumab govitecan-hziy             NaN        NaN  sacituzumab govitecan-hziy
+3   23313  5391                    trodelvy             NaN        NaN                    trodelvy
+4   23314  5391                    IMMU-132             NaN        NaN                    immu-132
 ```
 
 `syn_id` is the primary key of the table, while `id` is the identifier of the drug. For example, `id=5391` is the identifier of the drug `sacituzumab` which also appears under the name `sacituzumab govitecan` and `sacituzumab govitecan-hziy`, among others. The `name` column contains the names of the drugs, while the `lname` column contains the lower case version of the names. The `preferred_name` column is a boolean column that indicates whether the name is the preferred name for the drug. Finally, the `parent_id` column is the identifier of the parent drug, if any.
@@ -124,12 +140,6 @@ OPENAI_API_KEY=<your_openai_api_key>
 DB_USERNAME=<your_db_username>
 DB_PWD=<your_db_password>
 DB_NAME=<your_db_name>
-```
-
-From inside the directory run:
-
-```bash
-poetry run python -m drug_discoverer --nctids-file data/nctids.txt --output-file test_outputs.json --clf-type llm
 ```
 
 To see a list of all available options, run:
@@ -190,7 +200,134 @@ Example output json:
 }
 ```
 
-Please see the [Command-line Reference] for details.
+## Evaluation
+
+The evaluation of the results is not done by this script since there are no ground truth labels for the
+given clinical trials. If there were, we could use the F1 score to evaluate the results in a more quantitative way. Instead, the user should manually check the results and see if they make sense. 
+The user should also check the unmatched drugs and see if they are actually drugs or model hallucinations.
+
+Currently the data directory contains the following files:
+```
+data
+├── nctids.txt
+├── spacy_predictions.json
+├── spacy_matchedonly_predictions.json
+├── dummy_predictions.json
+├── llm_1shot_predictions.json
+└── llm_0shot_predictions.json
+```
+
+### Purely NLP Solution
+
+The `spacy_predictions.json` file contains the results of the purely NLP solution. The `spacy_matchedonly_predictions.json`
+file contains the results of the purely NLP solution, but only for the drugs that were matched in the database. Here is a sample of the former file:
+
+```json
+{
+  "NCT00071812": {
+      "matched": [
+          "belimumab"
+      ],
+      "unmatched": []
+  },
+  "NCT00074438": {
+      "matched": [
+          "rituximab",
+          "rituximab",
+          "methotrexate"
+      ],
+      "unmatched": [
+          "mtx",
+          "placebo",
+          "/rituxan",
+          "corticosteroids"
+      ]
+  },
+}
+```
+
+### LLM Classifier
+
+The `llm_1shot_predictions.json` file contains the results of the LLM classifier using the 1shot template. The `llm_0shot_predictions.json` file contains the results of the LLM classifier using the 0shot template. Here is a sample of the zero-shot predictions:
+
+```json
+{
+    "NCT00037648": {
+        "summary": "The purpose of this study is to determine the safety of anakinra in patients with Polyarticular-Course Juvenile Rheumatoid Arthritis, a form of rheumatoid arthritis affecting children.",
+        "matched": [],
+        "unmatched": []
+    },
+    "NCT00048542": {
+        "summary": "This is a multicenter, Phase 3 randomized, placebo-controlled study designed to evaluate adalimumab in children 4 to 17 years old with polyarticular juvenile idiopathic arthritis (JIA) who are either methotrexate (MTX) treated or non-MTX treated.",
+        "matched": [],
+        "unmatched": []
+    },
+  ...
+}
+```
+ As you can see, there are no matched drugs in the above example and that pattern persists for the whole set of inputs. This is because the 0shot template is not suitable for this kind of data. The 1shot template is more suitable for this kind of data, and it is the one that should be used. Here is a sample of the 1shot predictions:
+
+```json
+{
+    "NCT00037648": {
+        "summary": "The purpose of this study is to determine the safety of anakinra in patients with Polyarticular-Course Juvenile Rheumatoid Arthritis, a form of rheumatoid arthritis affecting children.",
+        "matched": [
+            "anakinra"
+        ],
+        "unmatched": []
+    },
+    "NCT00048542": {
+        "summary": "This is a multicenter, Phase 3 randomized, placebo-controlled study designed to evaluate adalimumab in children 4 to 17 years old with polyarticular juvenile idiopathic arthritis (JIA) who are either methotrexate (MTX) treated or non-MTX treated.",
+        "matched": [
+            "adalimumab",
+            "methotrexate"
+        ],
+        "unmatched": []
+    },
+    "NCT00071487": {
+        "summary": "The purpose of this study is to evaluate the safety and efficacy of 3 different doses of belimumab, administered in addition to standard therapy, in patients with active SLE disease.",
+        "matched": [
+            "belimumab"
+        ],
+        "unmatched": []
+    },
+  ...
+}
+```
+
+Here, the results are much more accurate. The LLM model is able to predict the drugs mentioned in the summaries with high accuracy. Further tuning the prompt and providing more data to the model will likely improve the results even further.
+
+### Dummy Classifier
+
+The `dummy_predictions.json` file contains the results of the dummy classifier. Here is a sample of the predictions:
+
+```json
+{
+    "NCT00037648": {
+        "summary": "The purpose of this study is to determine the safety of anakinra in patients with Polyarticular-Course Juvenile Rheumatoid Arthritis, a form of rheumatoid arthritis affecting children.",
+        "matched": [
+            "anakinra"
+        ]
+    },
+    "NCT00048542": {
+        "summary": "This is a multicenter, Phase 3 randomized, placebo-controlled study designed to evaluate adalimumab in children 4 to 17 years old with polyarticular juvenile idiopathic arthritis (JIA) who are either methotrexate (MTX) treated or non-MTX treated.",
+        "matched": [
+            "methotrexate",
+            "adalimumab"
+        ]
+    },
+    "NCT00071487": {
+        "summary": "The purpose of this study is to evaluate the safety and efficacy of 3 different doses of belimumab, administered in addition to standard therapy, in patients with active SLE disease.",
+        "matched": [
+            "belimumab"
+        ]
+    },
+  ...
+}
+```
+
+Considering that the dummy classifier is the baseline, the results are not bad. However, the LLM classifier is more accurate and should be used instead, since it is able to generalize better to unseen data.
+
 
 ## Contributing
 

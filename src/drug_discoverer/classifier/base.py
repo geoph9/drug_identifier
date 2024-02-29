@@ -68,14 +68,14 @@ class BaseClassifier(ABC):
             nctid_to_summary.items(), desc="Classifying summaries"
         ):
             labels = self.classify_single(summary)
-            nctid_to_drugs_found[nctid] = self._to_preferred_name(labels)
+            nctid_to_drugs_found[nctid] = (summary, self._to_preferred_name(labels))
         self.save_to_json(output_filename, nctid_to_drugs_found)
 
     def save_to_json(self, output_filename: str, nctid_to_drugs_found: dict) -> None:
         """Save the results to a json file."""
         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
         if self.save_unmatched_drugs:
-            for nctid, drugs in nctid_to_drugs_found.items():
+            for nctid, (summary, drugs) in nctid_to_drugs_found.items():
                 # TODO: Inneficent double parsing, but it's ok for now
                 unmatched_drugs = [
                     drug.replace("<UNMATCHED> ", "")
@@ -83,14 +83,18 @@ class BaseClassifier(ABC):
                     if "<UNMATCHED> " in drug
                 ]
                 nctid_to_drugs_found[nctid] = {
+                    "summary": summary,
                     "matched": [drug for drug in drugs if "<UNMATCHED>" not in drug],
                     "unmatched": unmatched_drugs,
                 }
         else:
-            for nctid, drugs in nctid_to_drugs_found.items():
+            for nctid, (summary, drugs) in nctid_to_drugs_found.items():
                 matched_drugs = [drug for drug in drugs if "<UNMATCHED>" not in drug]
                 # Make sure there is the same pattern regardless of self.save_unmatched_drugs
-                nctid_to_drugs_found[nctid] = {"matched": matched_drugs}
+                nctid_to_drugs_found[nctid] = {
+                    "summary": summary,
+                    "matched": matched_drugs
+                }
         with open(output_filename, "w") as f:
             json.dump(nctid_to_drugs_found, f, indent=4)
         logger.info(f"Saved the results to: {output_filename}")
