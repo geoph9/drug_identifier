@@ -72,7 +72,7 @@ gunzip drugcentral.dump.11012023.sql.gz
 # 2. Create a PostgreSQL database
 sudo -u postgres createdb your_database_name
 
-# 3. Validate that the user '<user>>' has the right privileges
+# 3. Validate that the user '<user>' has the right privileges
 # Replace 'your_database_name' with the actual database name you created
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE your_database_name TO <user>;"
 
@@ -87,10 +87,10 @@ after being loaded to a pandas dataframe (for demonstration purposes only; you d
 ```python
 >>> import pandas as pd
 ... from sqlalchemy import create_engine
->>> DATABASE_URI = 'postgresql://<user>:<passwd>@localhost/llmdrugs'
+>>> DATABASE_URI = 'postgresql://<user>:<passwd>@localhost/your_database_name'
 >>> engine = create_engine(DATABASE_URI, echo=True)  # Set echo to True for debugging
 >>> query = f"SELECT * FROM public.synonyms;"
-... df = pd.read_sql_query(query, engine)
+>>> df = pd.read_sql_query(query, engine)
 >>> df.head()
    syn_id      id                        name  preferred_name  parent_id                       lname
 0   23310  5391                 sacituzumab             NaN        NaN                 sacituzumab
