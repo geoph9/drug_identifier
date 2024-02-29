@@ -1,11 +1,13 @@
-from math import log
 import os
-import requests
-from typing import Dict, Union, List
+from math import log
 from pathlib import Path
+from typing import Dict
+from typing import List
+from typing import Union
 
-from loguru import logger
+import requests
 from dotenv import load_dotenv
+from loguru import logger
 from tqdm import tqdm
 
 
@@ -21,25 +23,33 @@ def get_logger_file(log_filename: str) -> str:
 
 
 logger.remove(0)
-logger.add(get_logger_file(__name__), level="DEBUG", colorize=False, backtrace=True, diagnose=True)
+logger.add(
+    get_logger_file(__name__),
+    level="DEBUG",
+    colorize=False,
+    backtrace=True,
+    diagnose=True,
+)
 
 
 def get_clinical_trials_summaries(nctids: Union[str, List[str]]) -> Dict[str, str]:
     """Get the brief summaries of clinical trials from clinicaltrials.gov for the given NCTIDs.
-    
+
     Arguments:
     ----------
     nctids : Union[str, List[str]]
         Either a string representing the path to a file containing NCTIDs or a list of NCTIDs.
-    
+
     Returns:
     --------
     Dict[str, str]
         A dictionary where the keys are the NCTIDs and the values are the brief summaries of the clinical trials.
     """
     if isinstance(nctids, str):
-        assert os.path.isfile(nctids), f"Expected to find a file containing list of NCTIDs under: {nctids}"
-        with open(nctids, "r") as f:
+        assert os.path.isfile(
+            nctids
+        ), f"Expected to find a file containing list of NCTIDs under: {nctids}"
+        with open(nctids) as f:
             nctids = f.readlines()
 
     base_url = "https://clinicaltrials.gov/api/v2/studies?query.term=AREA[NCTId]{NCTId}&fields=BriefSummary"
@@ -52,8 +62,11 @@ def get_clinical_trials_summaries(nctids: Union[str, List[str]]) -> Dict[str, st
         data = response.json()["studies"]
         logger.debug(f"For NCTID: {nctid}, found:\n\t{data}")
         assert len(data) == 1, f"Expected to find 1 study for NCTID: {nctid}"
-        summaries[nctid] = data[0]["protocolSection"]["descriptionModule"]["briefSummary"]
+        summaries[nctid] = data[0]["protocolSection"]["descriptionModule"][
+            "briefSummary"
+        ]
     return summaries
+
 
 def get_env_variables() -> Dict[str, str]:
     """Get the environment variables."""

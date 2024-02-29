@@ -1,25 +1,29 @@
 # Drug Discoverer
 
-[![PyPI](https://img.shields.io/pypi/v/drug_discoverer.svg)][pypi_]
-[![Status](https://img.shields.io/pypi/status/drug_discoverer.svg)][status]
-[![Python Version](https://img.shields.io/pypi/pyversions/drug_discoverer)][python version]
 [![License](https://img.shields.io/pypi/l/drug_discoverer)][license]
 
-[![Read the documentation at https://drug_discoverer.readthedocs.io/](https://img.shields.io/readthedocs/drug_discoverer/latest.svg?label=Read%20the%20Docs)][read the docs]
-[![Tests](https://github.com/geoph9/drug_discoverer/workflows/Tests/badge.svg)][tests]
 [![Codecov](https://codecov.io/gh/geoph9/drug_discoverer/branch/main/graph/badge.svg)][codecov]
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
-[pypi_]: https://pypi.org/project/drug_discoverer/
-[status]: https://pypi.org/project/drug_discoverer/
-[python version]: https://pypi.org/project/drug_discoverer
 [read the docs]: https://drug_discoverer.readthedocs.io/
-[tests]: https://github.com/geoph9/drug_discoverer/actions?workflow=Tests
-[codecov]: https://app.codecov.io/gh/geoph9/drug_discoverer
+[tests]: https://github.com/geoph9/drug_identifier/actions?workflow=Tests
+[codecov]: https://app.codecov.io/gh/geoph9/drug_identifier
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
+
+## TL;DR
+
+_Drug Discoverer_ is a Python library for identifying drugs in clinical trial summaries. Example usage from the command line:
+
+```bash
+python -m drug_discoverer --nctids-file data/nctids.txt --output-file test_outputs.json --clf-type llm
+```
+
+The above command will read the NCTIDs from the file `data/nctids.txt`, get their brief summaries from clinicaltrials.gov,
+and then use ChatGPT (through LangChain) to classify which drugs are mentioned in each summary. The results will be saved
+in json format in the file `test_outputs.json`.
 
 ## Features
 
@@ -27,13 +31,15 @@
 - Given a list of drugs, search the DrugCentral database to get a list of synonyms for the drugs.
 - For each clinical trial summary, identify the drug names that appear in the summary.
 - Option 1: Use a dummy classifier to predict whether a drug is mentioned in the summary. This is
-   purely for demonstration purposes and it just searches for words that appear both in the synonyms
-   table of the database and in the clinical trial summary.
+  purely for demonstration purposes and it just searches for words that appear both in the synonyms
+  table of the database and in the clinical trial summary.
 - Option 2: Use prompt engineering to ask an LLM model to predict whether a drug is mentioned in the
-   summary. LangChain is used for this purpose, along with ChatGPT.
-
+  summary. LangChain is used for this purpose, along with ChatGPT.
 
 NOTE: For the LLM prompting case, you need to have a valid openai API key (requires credits).
+
+Evaluating the results of the predictions is impossible since we don't have ground truth labels. However, 
+due to the small size of the given NCTIDs, we can manually check the results and see if they make sense.
 
 ## Requirements
 
@@ -61,6 +67,7 @@ sudo -u <user> psql -d your_database_name -a -f drugcentral.dump.11012023.sql
 
 We only care about the `synonyms` table of the `public` schema. Here is a preview of how that looks
 after being loaded to a pandas dataframe:
+
 ```python
 >>> import pandas as pd
 ... from sqlalchemy import create_engine
@@ -83,13 +90,27 @@ In our scenario, we will not use the `parent_id` information. Instead we will on
 
 ## Installation
 
-You can install _Drug Discoverer_ via poetry. To do so, you first need to clone this repository and 
+You can install _Drug Discoverer_ via poetry. To do so, you first need to clone this repository and
 follow the instructions below:
 
 ```bash
+# [Optional] Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# Clone the repository and install the dependencies
 git clone git@github.com:geoph9/drug_identifier.git
 cd drug_identifier
 poetry install
+```
+
+
+### Using SpaCy
+
+You will additionally need to download the medical NER model `en_core_med7_trf` from spaCy. To do so, run the following command:
+
+```bash
+poetry run pip install https://huggingface.co/kormilitzin/en_core_med7_trf/resolve/main/en_core_med7_trf-any-py3-none-any.whl
 ```
 
 ## Usage
@@ -101,6 +122,33 @@ OPENAI_API_KEY=<your_openai_api_key>
 DB_USERNAME=<your_db_username>
 DB_PWD=<your_db_password>
 DB_NAME=<your_db_name>
+```
+
+From inside the directory run:
+
+```bash
+poetry run python -m drug_discoverer --nctids-file data/nctids.txt --output-file test_outputs.json --clf-type llm
+```
+
+If you want to keep the information about the drugs found by the LLM that did not have a match in the database,
+then you may also pass the `--keep-unmatched-drugs` (or just `-k`) flag. The unmatched drugs will be saved in the
+same file as the matched ones and will be under the `"unmatched"` key of each NCTID.
+
+Example output json:
+```json
+{
+  "NCT00000102": {
+    "matched": [
+      "sacituzumab",
+      "trodelvy",
+      "immu-132"
+    ],
+    "unmatched": [
+      "SC902",
+    ]
+  },
+  ...
+}
 ```
 
 Please see the [Command-line Reference] for details.
@@ -132,6 +180,6 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 
 <!-- github-only -->
 
-[license]: https://github.com/geoph9/drug_discoverer/blob/main/LICENSE
-[contributor guide]: https://github.com/geoph9/drug_discoverer/blob/main/CONTRIBUTING.md
+[license]: https://github.com/geoph9/drug_identifier/blob/master/LICENSE
+[contributor guide]: https://github.com/geoph9/drug_identifier/blob/master/CONTRIBUTING.md
 [command-line reference]: https://drug_discoverer.readthedocs.io/en/latest/usage.html

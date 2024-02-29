@@ -9,11 +9,12 @@ Example:
     -> ["salituzumab"]
 """
 
-from typing import List
 import re
+from typing import List
 
 from drug_discoverer.classifier.base import BaseClassifier
 from drug_discoverer.drug_db import DrugDB
+
 
 class DummyClassifier(BaseClassifier):
     def classify_single(self, text: str) -> List[str]:
@@ -23,11 +24,11 @@ class DummyClassifier(BaseClassifier):
         if self.to_lower:
             text = text.lower()
         if self.remove_punctuation:
-            text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
+            text = re.sub(r"[^a-zA-Z0-9\s]", " ", text)
         # also replace multiple new lines with one space
-        text = re.sub(r'\n+', ' ', text)
-        text = re.sub(r'\n', ' ', text)
-        text = re.sub(r' +', ' ', text).strip()
+        text = re.sub(r"\n+", " ", text)
+        text = re.sub(r"\n", " ", text)
+        text = re.sub(r" +", " ", text).strip()
         words = text.split()
         output = []
         for word in words:
