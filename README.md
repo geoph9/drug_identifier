@@ -117,6 +117,9 @@ source .venv/bin/activate
 # Clone the repository and install the dependencies
 git clone git@github.com:geoph9/drug_identifier.git
 cd drug_identifier
+
+# [Optional (if planning to use as a library)] Choose the python binary for poetry
+# poetry env use ../.venv/bin/python
 poetry install
 ```
 
@@ -187,6 +190,7 @@ Example output json:
 ```json
 {
   "NCT00000102": {
+    "summary": "...",
     "matched": [
       "sacituzumab",
       "trodelvy",
@@ -224,25 +228,31 @@ file contains the results of the purely NLP solution, but only for the drugs tha
 
 ```json
 {
-  "NCT00071812": {
+  "NCT00037648": {
+      "summary": "The purpose of this study is to determine the safety of anakinra in patients with Polyarticular-Course Juvenile Rheumatoid Arthritis, a form of rheumatoid arthritis affecting children.",
+      "matched": [
+          "anakinra"
+      ],
+      "unmatched": []
+  },
+  "NCT00048542": {
+      "summary": "This is a multicenter, Phase 3 randomized, placebo-controlled study designed to evaluate adalimumab in children 4 to 17 years old with polyarticular juvenile idiopathic arthritis (JIA) who are either methotrexate (MTX) treated or non-MTX treated.",
+      "matched": [
+          "adalimumab",
+          "methotrexate"
+      ],
+      "unmatched": [
+          "mtx"
+      ]
+  },
+  "NCT00071487": {
+      "summary": "The purpose of this study is to evaluate the safety and efficacy of 3 different doses of belimumab, administered in addition to standard therapy, in patients with active SLE disease.",
       "matched": [
           "belimumab"
       ],
       "unmatched": []
   },
-  "NCT00074438": {
-      "matched": [
-          "rituximab",
-          "rituximab",
-          "methotrexate"
-      ],
-      "unmatched": [
-          "mtx",
-          "placebo",
-          "/rituxan",
-          "corticosteroids"
-      ]
-  },
+  ...
 }
 ```
 
@@ -326,7 +336,7 @@ The `dummy_predictions.json` file contains the results of the dummy classifier. 
 }
 ```
 
-Considering that the dummy classifier is the baseline, the results are not bad. However, the LLM classifier is more accurate and should be used instead, since it is able to generalize better to unseen data.
+Considering that the dummy classifier is the baseline, the results are not bad. However, the LLM classifier is more accurate and should be used instead since it is able to generalize better to unseen data. LLMs with big context windows will also be able to accept a list of available drugs and predict whether each one is mentioned in the summary in any form.
 
 
 ## Contributing
