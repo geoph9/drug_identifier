@@ -120,7 +120,11 @@ cd drug_identifier
 
 # [Optional (if planning to use as a library)] Choose the python binary for poetry
 # poetry env use ../.venv/bin/python
+# Install Package
 poetry install
+
+# You could also do a pip install, although that is not recommended since poetry will handle the dependencies better:
+# pip install -e .
 ```
 
 ### Using SpaCy
